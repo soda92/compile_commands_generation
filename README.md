@@ -7,8 +7,8 @@ Install:
 1. rename cl.exe to cl2.exe
 1. copy shim.exe to VS Directory as cl.exe
 1. back to repo directory
-1. run init_wrapper_config.py, this will set database location
-1. run build_exe.py
+1. run `init_wrapper_config.py`, this will set database location
+1. run `pyinstaller --onefile generate_compile_commands.py`
 1. add repo_directory/dist to PATH
 1. fully rebuild programs to record compile commands
 1. in project path, run generate_compile_commands.exe, 
