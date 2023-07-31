@@ -65,7 +65,7 @@ def write_compile_commands(args: list[str]):
 
 if __name__ == "__main__":
     args_without_exe_path = sys.argv[1:]
-    print(sys.argv)
+    # print(sys.argv)
     write_compile_commands(args_without_exe_path)
     subprocess.run(
         [

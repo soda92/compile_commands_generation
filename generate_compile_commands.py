@@ -23,12 +23,19 @@ def generate(commands: list[CompileCommand], file: Path):
     file.write_text(json.dumps(commands, default=CompileCommand.__json__, indent=4))
 
 
-def get_compile_commands():
+def get_compile_commands(context: Path):
+    context: str = str(context).replace("\\", "/")
+    if context.endswith("/"):
+        context = context[:-1]
     con = sqlite3.connect(DB)
     con.row_factory = sqlite3.Row
     ret = []
     with con:
-        res = con.execute("SELECT file, directory, command FROM compile_commands")
+        res = con.execute(
+            "SELECT file, directory, command FROM compile_commands"
+            " WHERE directory LIKE ? || '%'",
+            (context,),
+        )
         all = res.fetchall()
         for i in all:
             d = dict(i)
@@ -41,7 +48,8 @@ def get_compile_commands():
 
 
 if __name__ == "__main__":
-    commands = get_compile_commands()
     context = os.getcwd()
-    file = Path(context).resolve().joinpath("compile_commands.json")
+    context = Path(context).resolve()
+    commands = get_compile_commands(context)
+    file = context.joinpath("compile_commands.json")
     generate(commands, file)
