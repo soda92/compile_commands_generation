@@ -1,0 +1,10 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "invoke_demo_compile",
+            "type": "shell",
+            "command": "python invoke_demo_compile.py",
+        }
+    ]
+}
