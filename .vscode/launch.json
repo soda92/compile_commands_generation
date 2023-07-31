@@ -7,19 +7,32 @@
         {
             "name": "cl_wrapper: connect",
             "type": "python",
-            // "preLaunchTask": "invoke_demo_compile",
+            // "preLaunchTask": "run_demo_compile",
             "request": "attach",
             "connect": {
                 "host": "127.0.0.1",
-                "port": 5678
+                "port": 56799
             },
             "justMyCode": true
         },
         {
-            "name": "invoke_demo_compile",
+            "name": "run_demo_compile",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/invoke_demo_compile.py",
+            "program": "${workspaceFolder}/run_demo_compile.py",
+            "args": [
+                "--debug",
+                "--port",
+                "56799"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "generate_compile_commands",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/generate_compile_commands.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }

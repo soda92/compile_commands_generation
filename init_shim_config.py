@@ -8,7 +8,7 @@ shim_file = CL_DIR.joinpath("cl.shim")
 def write_shim_config():
     shim_file.write_text(
         f"""path = python.exe
-    args = {wrapper_path}"""
+args = {wrapper_path}"""
     )
 
 

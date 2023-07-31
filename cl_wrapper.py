@@ -51,13 +51,13 @@ def write_compile_commands(args: list[str]):
     if args[0].startswith("@"):
         file = args[0][1:]
         content = Path(file).read_text(encoding="UTF-16")
-        directory = str(Path(os.getcwd()).resolve())
+        directory = str(Path(os.getcwd()).resolve()).replace('\\', '/')
         lines = content.split("\n")
         args = [process_arg(arg) for arg in lines[0].split(" ")]
         files = lines[1:]
-        files = list(map(lambda x: str(Path(directory).resolve().joinpath(x)), files))
+        files = list(map(lambda x: str(Path(directory).resolve().joinpath(x)).replace('\\', '/'), files))
         for file in files:
-            command = f"C:/PROGRA~1/LLVM/bin/clang-cl.exe {' '.join(args)}"
+            command = f"C:/PROGRA~1/LLVM/bin/clang-cl.exe {' '.join(args)} {file}"
             insert_db(file, directory, command)
     else:
         raise UnimplementedError()
@@ -65,6 +65,7 @@ def write_compile_commands(args: list[str]):
 
 if __name__ == "__main__":
     args_without_exe_path = sys.argv[1:]
+    print(sys.argv)
     write_compile_commands(args_without_exe_path)
     subprocess.run(
         [

@@ -20,17 +20,23 @@ class CompileCommand:
 
 
 def generate(commands: list[CompileCommand], file: Path):
-    file.write_text(json.dumps(commands, default=CompileCommand.__json__))
+    file.write_text(json.dumps(commands, default=CompileCommand.__json__, indent=4))
 
 
 def get_compile_commands():
     con = sqlite3.connect(DB)
+    con.row_factory = sqlite3.Row
     ret = []
     with con:
-        res = con.execute("SELECT(file, directory, command) FROm compile_commands")
+        res = con.execute("SELECT file, directory, command FROM compile_commands")
         all = res.fetchall()
         for i in all:
-            ret.append(i["file"], i["directory"], i["command"])
+            d = dict(i)
+            command = CompileCommand()
+            command.file = d["file"]
+            command.directory = d["directory"]
+            command.command = d["command"]
+            ret.append(command)
     return ret
 
 
