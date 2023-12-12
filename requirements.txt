@@ -1,2 +1,4 @@
 debugpy
+pyinstaller
+
 # scoop install sqlite
