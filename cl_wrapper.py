@@ -28,29 +28,28 @@ class UnimplementedError(Exception):
 
 
 def insert_db(file: str, directory: str, command: str):
-    with connection:
-        with connection.cursor() as cursor:
-            res = cursor.execute("SELECT * FROM compile_commands WHERE file=%s", (file,))
-            if res != 0:
-                cursor.execute(
-                    "UPDATE compile_commands SET directory=%s, command=%s WHERE file=%s",
-                    (
-                        directory,
-                        command,
-                        file,
-                    ),
-                )
-            else:
-                cursor.execute(
-                    "INSERT INTO compile_commands(file, directory, command) "
-                    "values (%s, %s, %s)",
-                    (
-                        file,
-                        directory,
-                        command,
-                    ),
-                )
-        connection.commit()
+    with connection.cursor() as cursor:
+        res = cursor.execute("SELECT * FROM compile_commands WHERE file=%s", (file,))
+        if res != 0:
+            cursor.execute(
+                "UPDATE compile_commands SET directory=%s, command=%s WHERE file=%s",
+                (
+                    directory,
+                    command,
+                    file,
+                ),
+            )
+        else:
+            cursor.execute(
+                "INSERT INTO compile_commands(file, directory, command) "
+                "values (%s, %s, %s)",
+                (
+                    file,
+                    directory,
+                    command,
+                ),
+            )
+    connection.commit()
 
 
 def write_compile_commands(args: list[str]):
@@ -72,6 +71,7 @@ def write_compile_commands(args: list[str]):
                 else:
                     args.append(arg)
 
+        files = list(filter(lambda x: x.strip() != "", files))
         files = list(
             map(
                 lambda x: str(Path(directory).resolve().joinpath(x)).replace("\\", "/"),
@@ -91,6 +91,7 @@ if __name__ == "__main__":
     args_without_exe_path = sys.argv[2:]
     # print(sys.argv)
     write_compile_commands(args_without_exe_path)
+    connection.close()
     subprocess.run(
         [
             cl_origin,
