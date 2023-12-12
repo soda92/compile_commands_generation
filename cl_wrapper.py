@@ -1,14 +1,18 @@
 import subprocess
-import sqlite3
 import sys
 import os
 from pathlib import Path
+import pymysql
 
-from defines import DB, get_cl_origin
+from defines import get_cl_origin
 
-con = sqlite3.connect(DB)
-with con:
-    con.execute("CREATE TABLE IF NOT EXISTS compile_commands(file, directory, command)")
+connection = pymysql.connect(
+    host="localhost",
+    user="root",
+    password="123456",
+    database="compile_commands",
+    cursorclass=pymysql.cursors.DictCursor,
+)
 
 
 def process_arg(arg: str) -> str:
@@ -24,27 +28,29 @@ class UnimplementedError(Exception):
 
 
 def insert_db(file: str, directory: str, command: str):
-    with con:
-        res = con.execute("SELECT * FROM compile_commands WHERE file=?", (file,))
-        if res.fetchone():
-            con.execute(
-                "UPDATE compile_commands SET directory=?, command=? WHERE file=?",
-                (
-                    directory,
-                    command,
-                    file,
-                ),
-            )
-        else:
-            con.execute(
-                "INSERT INTO compile_commands(file, directory, command) "
-                "values (?, ?, ?)",
-                (
-                    file,
-                    directory,
-                    command,
-                ),
-            )
+    with connection:
+        with connection.cursor() as cursor:
+            res = cursor.execute("SELECT * FROM compile_commands WHERE file=%s", (file,))
+            if res != 0:
+                cursor.execute(
+                    "UPDATE compile_commands SET directory=%s, command=%s WHERE file=%s",
+                    (
+                        directory,
+                        command,
+                        file,
+                    ),
+                )
+            else:
+                cursor.execute(
+                    "INSERT INTO compile_commands(file, directory, command) "
+                    "values (%s, %s, %s)",
+                    (
+                        file,
+                        directory,
+                        command,
+                    ),
+                )
+        connection.commit()
 
 
 def write_compile_commands(args: list[str]):
