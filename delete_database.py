@@ -1,4 +1,4 @@
-from defines import CL_ORIGIN, CURRENT, DB
+from defines import DB
 import sqlite3
 
 con = sqlite3.connect(DB)

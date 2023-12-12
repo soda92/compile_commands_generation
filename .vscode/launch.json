@@ -16,7 +16,7 @@
             "justMyCode": true
         },
         {
-            "name": "run_demo_compile",
+            "name": "Test VS2008",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/run_demo_compile.py",
@@ -24,6 +24,21 @@
                 "--debug",
                 "--port",
                 "56799"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Test VS2019",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/run_demo_compile.py",
+            "args": [
+                "--debug",
+                "--port",
+                "56799",
+                "--vs-version",
+                "2019_64"
             ],
             "console": "integratedTerminal",
             "justMyCode": true
