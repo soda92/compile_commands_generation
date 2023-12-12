@@ -1,0 +1,1 @@
+C:\Qt\4.7.2_VS2008\bin\qmake.exe -tp vc
