@@ -1,0 +1,4 @@
+*.vcproj
+/debug
+/release
+/vc90*

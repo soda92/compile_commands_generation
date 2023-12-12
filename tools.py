@@ -1,4 +1,4 @@
-from defines import CL_DIR
+from defines import *
 import os, contextlib
 import subprocess
 
@@ -12,9 +12,17 @@ def CD(dir: str):
 
 
 def vs2008_set_env():
-    with CD(CL_DIR):
-        output = subprocess.getoutput('cmd /c "vcvars32.bat&set"')
+    with CD("C:/Program Files (x86)/Microsoft Visual Studio 9.0/Common7/Tools/"):
+        output = subprocess.getoutput('cmd /c "vsvars32.bat&set"')
         for line in output.split("\n"):
             if "=" in line:
-                key, val = line.split("=")
+                key, val = line.split("=", maxsplit=1)
+                os.putenv(key, val)
+
+def vs2019_set_env():
+    with CD("C:/Program Files (x86)/Microsoft Visual Studio/2019/Professional/VC/Auxiliary/Build"):
+        output = subprocess.getoutput('cmd /c "vcvars64.bat&set"')
+        for line in output.split("\n"):
+            if "=" in line:
+                key, val = line.split("=", maxsplit=1)
                 os.putenv(key, val)
