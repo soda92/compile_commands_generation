@@ -4,7 +4,7 @@ import sys
 import os
 from pathlib import Path
 
-from defines import CL_ORIGIN, CURRENT, DB
+from defines import DB, get_cl_origin
 
 con = sqlite3.connect(DB)
 with con:
@@ -64,12 +64,14 @@ def write_compile_commands(args: list[str]):
 
 
 if __name__ == "__main__":
-    args_without_exe_path = sys.argv[1:]
+    vs_version = sys.argv[1]
+    cl_origin = get_cl_origin(vs_version=vs_version)
+    args_without_exe_path = sys.argv[2:]
     # print(sys.argv)
     write_compile_commands(args_without_exe_path)
     subprocess.run(
         [
-            CL_ORIGIN,
+            cl_origin,
             *args_without_exe_path,
         ],
         check=True,

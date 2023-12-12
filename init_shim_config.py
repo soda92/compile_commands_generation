@@ -5,11 +5,6 @@ wrapper = CURRENT.joinpath("cl_wrapper.py")
 wrapper_path = str(wrapper)
 
 
-def get_cl_dir(vs_version: str):
-    if vs_version == "2008":
-        return CL_DIR
-    elif vs_version == "2019_64":
-        return CL_DIR_2019_64
 
 
 def write_shim_config(vs_version: str):
@@ -17,7 +12,7 @@ def write_shim_config(vs_version: str):
     shim_file = cl_dir.joinpath("cl.shim")
     shim_file.write_text(
         f"""path = python.exe
-args = {wrapper_path}"""
+args = {wrapper_path} {vs_version}"""
     )
 
 

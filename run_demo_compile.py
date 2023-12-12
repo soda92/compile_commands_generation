@@ -10,11 +10,14 @@ import argparse
 
 @contextlib.contextmanager
 def CreateDebuggingConfig(port: int, vs_version: str):
-    with CD(CL_DIR):
+    _CL_DIR = CL_DIR
+    if vs_version == "2019_64":
+        _CL_DIR = "C:/Program Files (x86)/Microsoft Visual Studio/2019/Professional/VC/Tools/MSVC/14.29.30133/bin/Hostx64/x64"
+    with CD(_CL_DIR):
         with open("cl.shim", mode="w") as file:
             file.write(
                 f"""path = python.exe
-args = -m debugpy --listen 56799 --wait-for-client {wrapper_path}"""
+args = -m debugpy --listen 56799 --wait-for-client {wrapper_path} {vs_version}"""
             )
     yield
 
@@ -28,9 +31,9 @@ def run_vcbuild(proj: str):
     )
 
 
-def run_msbuild():
+def run_msbuild(proj: str):
     subprocess.run(
-        "vcbuild demo.vcproj /nologo /platform:Win32 Debug /rebuild".split(),
+        f"msbuild {proj} -t:Rebuild -p:Configuration=Debug".split(),
         check=True,
     )
 
