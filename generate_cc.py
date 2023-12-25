@@ -34,20 +34,20 @@ def get_compile_commands(context: Path):
     
     ret = []
     with connection.cursor() as cursor:
-        res = cursor.execute(
+        cursor.execute(
             "SELECT file, directory, command FROM compile_commands"
-            " WHERE directory LIKE ? || '%'",
+            " WHERE directory LIKE CONCAT(%s, '%%')",
             (context,),
         )
-        all = res.fetchall()
+        all = cursor.fetchall()
         for i in all:
-            d = dict(i)
+            d = i
             command = CompileCommand()
-            command.file = d["file"]
+            command.file = d[0]
             if not Path(command.file).exists():
                 continue
-            command.directory = d["directory"]
-            command.command = d["command"]
+            command.directory = d[1]
+            command.command = d[2]
             ret.append(command)
     return ret
 
@@ -57,7 +57,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--path", "-P", type=str, default=os.getcwd())
     args = parser.parse_args()
-    context = args.path
+    context = Path(args.path).resolve()
     commands = get_compile_commands(context)
     file = context.joinpath("compile_commands.json")
     generate(commands, file)
