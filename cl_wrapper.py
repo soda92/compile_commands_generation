@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import pymysql
 
-from defines import get_cl_origin
+from cl_dir_defines import get_cl_origin
 
 connection = pymysql.connect(
     host="localhost",

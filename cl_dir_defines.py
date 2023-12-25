@@ -16,14 +16,3 @@ def get_cl_dir(vs_version: str):
 def get_cl_origin(vs_version: str):
     cl_dir = get_cl_dir(vs_version=vs_version)
     return cl_dir.joinpath("cl2.exe")
-
-
-CURRENT = Path(__file__).resolve().parent
-
-DB = CURRENT.joinpath("db.sqlite3")
-
-import sys
-
-if getattr(sys, "frozen", False):
-    CURRENT = Path(sys.executable).resolve().parent
-    DB = CURRENT.parent.joinpath("db.sqlite3")

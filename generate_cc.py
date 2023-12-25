@@ -3,7 +3,7 @@ import os
 import sqlite3
 from pathlib import Path
 
-from defines import DB
+from cl_dir_defines import DB
 
 
 class CompileCommand:

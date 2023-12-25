@@ -1,6 +1,7 @@
-from defines import *
+from cl_dir_defines import *
 import argparse
 
+CURRENT = Path(__file__).resolve().parent
 wrapper = CURRENT.joinpath("cl_wrapper.py")
 wrapper_path = str(wrapper)
 

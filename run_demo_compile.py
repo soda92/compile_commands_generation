@@ -1,6 +1,6 @@
 import subprocess
 import contextlib
-from defines import CL_DIR
+from cl_dir_defines import CL_DIR
 
 from init_shim_config import write_shim_config, wrapper_path
 from tools import CD, vs2008_set_env, vs2019_set_env

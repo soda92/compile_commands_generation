@@ -1,4 +1,4 @@
-from defines import *
+from cl_dir_defines import *
 import os, contextlib
 import subprocess
 
