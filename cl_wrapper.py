@@ -5,6 +5,7 @@ from pathlib import Path
 import psycopg2
 
 from cl_dir_defines import get_cl_origin
+from tools import parse_vs_version
 
 connection = psycopg2.connect(
     host="localhost",
@@ -84,7 +85,7 @@ def write_compile_commands(args: list[str]):
 
 
 if __name__ == "__main__":
-    vs_version = sys.argv[1]
+    vs_version = parse_vs_version(sys.argv[1])
     cl_origin = get_cl_origin(vs_version=vs_version)
     args_without_exe_path = sys.argv[2:]
     # print(sys.argv)
