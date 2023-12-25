@@ -1,4 +1,2 @@
 debugpy
-pyinstaller
 PyMySQL
-# scoop install sqlite

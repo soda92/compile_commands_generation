@@ -1,1 +1,0 @@
-sqlite3 db.sqlite3 '.dump' > schema.sql

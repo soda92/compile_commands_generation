@@ -1,6 +1,5 @@
 import subprocess
 import contextlib
-import os
 from defines import CL_DIR
 
 from init_shim_config import write_shim_config, wrapper_path

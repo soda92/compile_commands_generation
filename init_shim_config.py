@@ -5,8 +5,6 @@ wrapper = CURRENT.joinpath("cl_wrapper.py")
 wrapper_path = str(wrapper)
 
 
-
-
 def write_shim_config(vs_version: str):
     cl_dir = get_cl_dir(vs_version=vs_version)
     shim_file = cl_dir.joinpath("cl.shim")
