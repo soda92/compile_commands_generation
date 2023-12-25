@@ -1,0 +1,6 @@
+{
+    "cmake.sourceDirectory": "C:/src/compile_commands_generation/demo_project",
+    "cmake.configureOnOpen": true,
+    "cmake.options.statusBarVisibility": "hidden",
+    "python.createEnvironment.trigger": "off"
+}
