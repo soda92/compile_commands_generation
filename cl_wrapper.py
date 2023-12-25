@@ -8,10 +8,8 @@ from cl_dir_defines import get_cl_origin
 from tools import parse_vs_version
 
 connection = psycopg2.connect(
-    host="localhost",
-    database="postgres",
-    user="postgres",
-    password="")
+    host="localhost", database="postgres", user="postgres", password=""
+)
 
 
 def process_arg(arg: str) -> str:
@@ -28,8 +26,9 @@ class UnimplementedError(Exception):
 
 def insert_db(file: str, directory: str, command: str):
     with connection.cursor() as cursor:
-        res = cursor.execute("SELECT * FROM compile_commands WHERE file=%s", (file,))
-        if res != 0:
+        cursor.execute("SELECT * FROM compile_commands WHERE file=%s", (file,))
+        result = cursor.fetchall()
+        if len(result) != 0:
             cursor.execute(
                 "UPDATE compile_commands SET directory=%s, command=%s WHERE file=%s",
                 (

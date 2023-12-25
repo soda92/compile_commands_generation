@@ -59,7 +59,7 @@
             "justMyCode": true
         },
         {
-            "name": "generate_compile_commands",
+            "name": "generate compile commands",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/generate_cc.py",
