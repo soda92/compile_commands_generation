@@ -2,17 +2,15 @@ import subprocess
 import sys
 import os
 from pathlib import Path
-import pymysql
+import psycopg2
 
 from cl_dir_defines import get_cl_origin
 
-connection = pymysql.connect(
+connection = psycopg2.connect(
     host="localhost",
-    user="root",
-    password="123456",
-    database="compile_commands",
-    cursorclass=pymysql.cursors.DictCursor,
-)
+    database="postgres",
+    user="postgres",
+    password="")
 
 
 def process_arg(arg: str) -> str:

@@ -1,9 +1,13 @@
 import json
 import os
-import sqlite3
+import psycopg2
 from pathlib import Path
 
-from cl_dir_defines import DB
+connection = psycopg2.connect(
+    host="localhost",
+    database="postgres",
+    user="postgres",
+    password="")
 
 
 class CompileCommand:
@@ -27,11 +31,10 @@ def get_compile_commands(context: Path):
     context: str = str(context).replace("\\", "/")
     if context.endswith("/"):
         context = context[:-1]
-    con = sqlite3.connect(DB)
-    con.row_factory = sqlite3.Row
+    
     ret = []
-    with con:
-        res = con.execute(
+    with connection.cursor() as cursor:
+        res = cursor.execute(
             "SELECT file, directory, command FROM compile_commands"
             " WHERE directory LIKE ? || '%'",
             (context,),
