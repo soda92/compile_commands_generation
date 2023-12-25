@@ -41,6 +41,8 @@ def get_compile_commands(context: Path):
             d = dict(i)
             command = CompileCommand()
             command.file = d["file"]
+            if not Path(command.file).exists():
+                continue
             command.directory = d["directory"]
             command.command = d["command"]
             ret.append(command)
@@ -48,8 +50,11 @@ def get_compile_commands(context: Path):
 
 
 if __name__ == "__main__":
-    context = os.getcwd()
-    context = Path(context).resolve()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--path", "-P", type=str, default=os.getcwd())
+    args = parser.parse_args()
+    context = args.path
     commands = get_compile_commands(context)
     file = context.joinpath("compile_commands.json")
     generate(commands, file)
