@@ -1,9 +1,13 @@
 import json
 import os
-import sqlite3
+import psycopg2
 from pathlib import Path
 
-from defines import DB
+connection = psycopg2.connect(
+    host="localhost",
+    database="postgres",
+    user="postgres",
+    password="")
 
 
 class CompileCommand:
@@ -27,29 +31,33 @@ def get_compile_commands(context: Path):
     context: str = str(context).replace("\\", "/")
     if context.endswith("/"):
         context = context[:-1]
-    con = sqlite3.connect(DB)
-    con.row_factory = sqlite3.Row
+    
     ret = []
-    with con:
-        res = con.execute(
+    with connection.cursor() as cursor:
+        cursor.execute(
             "SELECT file, directory, command FROM compile_commands"
-            " WHERE directory LIKE ? || '%'",
+            " WHERE directory LIKE CONCAT(%s, '%%')",
             (context,),
         )
-        all = res.fetchall()
+        all = cursor.fetchall()
         for i in all:
-            d = dict(i)
+            d = i
             command = CompileCommand()
-            command.file = d["file"]
-            command.directory = d["directory"]
-            command.command = d["command"]
+            command.file = d[0]
+            if not Path(command.file).exists():
+                continue
+            command.directory = d[1]
+            command.command = d[2]
             ret.append(command)
     return ret
 
 
 if __name__ == "__main__":
-    context = os.getcwd()
-    context = Path(context).resolve()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--path", "-P", type=str, default=os.getcwd())
+    args = parser.parse_args()
+    context = Path(args.path).resolve()
     commands = get_compile_commands(context)
     file = context.joinpath("compile_commands.json")
     generate(commands, file)

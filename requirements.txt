@@ -1,4 +1,3 @@
 debugpy
-pyinstaller
-
-# scoop install sqlite
+psycopg2
+pyuac

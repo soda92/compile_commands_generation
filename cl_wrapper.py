@@ -1,14 +1,15 @@
 import subprocess
-import sqlite3
 import sys
 import os
 from pathlib import Path
+import psycopg2
 
-from defines import DB, get_cl_origin
+from cl_dir_defines import get_cl_origin
+from tools import parse_vs_version
 
-con = sqlite3.connect(DB)
-with con:
-    con.execute("CREATE TABLE IF NOT EXISTS compile_commands(file, directory, command)")
+connection = psycopg2.connect(
+    host="localhost", database="postgres", user="postgres", password=""
+)
 
 
 def process_arg(arg: str) -> str:
@@ -24,11 +25,12 @@ class UnimplementedError(Exception):
 
 
 def insert_db(file: str, directory: str, command: str):
-    with con:
-        res = con.execute("SELECT * FROM compile_commands WHERE file=?", (file,))
-        if res.fetchone():
-            con.execute(
-                "UPDATE compile_commands SET directory=?, command=? WHERE file=?",
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM compile_commands WHERE file=%s", (file,))
+        result = cursor.fetchall()
+        if len(result) != 0:
+            cursor.execute(
+                "UPDATE compile_commands SET directory=%s, command=%s WHERE file=%s",
                 (
                     directory,
                     command,
@@ -36,15 +38,16 @@ def insert_db(file: str, directory: str, command: str):
                 ),
             )
         else:
-            con.execute(
+            cursor.execute(
                 "INSERT INTO compile_commands(file, directory, command) "
-                "values (?, ?, ?)",
+                "values (%s, %s, %s)",
                 (
                     file,
                     directory,
                     command,
                 ),
             )
+    connection.commit()
 
 
 def write_compile_commands(args: list[str]):
@@ -66,6 +69,7 @@ def write_compile_commands(args: list[str]):
                 else:
                     args.append(arg)
 
+        files = list(filter(lambda x: x.strip() != "", files))
         files = list(
             map(
                 lambda x: str(Path(directory).resolve().joinpath(x)).replace("\\", "/"),
@@ -80,11 +84,12 @@ def write_compile_commands(args: list[str]):
 
 
 if __name__ == "__main__":
-    vs_version = sys.argv[1]
+    vs_version = parse_vs_version(sys.argv[1])
     cl_origin = get_cl_origin(vs_version=vs_version)
     args_without_exe_path = sys.argv[2:]
     # print(sys.argv)
     write_compile_commands(args_without_exe_path)
+    connection.close()
     subprocess.run(
         [
             cl_origin,

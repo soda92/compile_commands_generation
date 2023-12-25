@@ -44,10 +44,25 @@
             "justMyCode": true
         },
         {
-            "name": "generate_compile_commands",
+            "name": "Test VS2022",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/generate_compile_commands.py",
+            "program": "${workspaceFolder}/run_demo_compile.py",
+            "args": [
+                "--debug",
+                "--port",
+                "56799",
+                "--vs-version",
+                "2022_64"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "generate compile commands",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/generate_cc.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }
